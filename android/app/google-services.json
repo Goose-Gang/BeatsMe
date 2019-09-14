@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "405306958645",
+    "firebase_url": "https://beatsme-66dd6.firebaseio.com",
+    "project_id": "beatsme-66dd6",
+    "storage_bucket": "beatsme-66dd6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:405306958645:android:a64e7f9faa8f8eed30627c",
+        "android_client_info": {
+          "package_name": "com.example.beats_me"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405306958645-r5b701ubc07fh8ofgp6agp005ncksc9g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ_uPMDE6ysqGtA2tX-6305NxfclkVPmk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405306958645-r5b701ubc07fh8ofgp6agp005ncksc9g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
