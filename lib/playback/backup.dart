@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:video_player/video_player.dart';
 
-class Playback extends StatefulWidget {
+
+void main() => runApp(MyApp());
+class MyApp extends StatefulWidget {
 
   @override
-  PlaybackState createState() => PlaybackState();
+  MyAppState createState() => MyAppState();
 }
-class PlaybackState extends State<Playback>{
+class MyAppState extends State<MyApp>{
   // sample lengths for testing
   List<double> lengthRatios = <double>[
     0.0527, 0.612, 0.663, 0.597, 0.525, 0.297, 0.289, 0.546, 0.715, 0.635, 0.62, 0.431, 0.282, 0.305, 0.604, 0.779, 0.874, 0.848, 0.897,0.753, 0.888, 0.796, 0.815, 0.742, 0.866, 0.788, 0.798, 0.759, 0.52, 0.524, 0.577, 0.533, 0.593, 0.35, 0.628, 0.47, 0.636, 0.638, 0.615, 0.654, 0.431, 0.867, 0.856, 0.845, 0.788, 0.844, 0.756, 0.807, 0.816, 0.698, 0.85, 0.831, 0.726, 0.753, 0.607, 0.334, 0.408, 0.524, 0.588, 0.646, 0.545, 0.681, 0.746, 0.739, 0.927, 0.636, 0.505, 0.536, 0.875, 0.748, 0.979, 0.767, 0.733, 0.862, 0.892, 0.812, 0.802,0.995, 0.925, 0.976, 0.767, 0.76, 0.688, 0.746, 0.755, 0.689, 0.638, 0.661, 0.807, 0.659, 0.741, 0.763, 0.785, 0.564, 0.808, 0.832, 0.914, 0.824, 0.852, 0.868, 0.746, 0.888, 0.727, 0.784, 0.851, 0.794, 0.753, 0.683, 0.353, 0.232, 0.253, 0.342, 0.297, 0.288, 0.512, 0.82, 0.79, 0.769, 0.663, 0.624, 0.615, 0.808, 0.811, 0.815, 0.918, 0.616, 0.722, 0.857, 0.717, 0.557, 0.637, 0.591, 0.596, 0.481, 0.734, 0.76, 0.816, 0.721, 0.789, 0.914, 0.743, 0.999, 0.836, 0.89, 0.872, 0.812, 0.866, 0.778, 0.883, 0.871, 0.871, 0.928, 0.916, 0.88, 0.979, 0.91, 0.89, 0.864, 0.918, 1.0, 0.826, 0.894, 0.84, 0.768, 0.865, 0.868, 0.805, 0.841, 0.826, 0.884, 0.837, 0.823, 0.859, 0.874, 0.802, 0.818, 0.804, 0.86, 0.918, 0.889, 0.898, 0.877, 0.897, 0.845,0.884, 0.858, 0.902, 0.836, 0.484, 0.181, 0.163, 0.379, 0.286, 0.357, 0.207, 0.0111, 0.0004, 0.0, 0.0
@@ -85,25 +87,21 @@ class PlaybackState extends State<Playback>{
           body: //Column(children:[
           NotificationListener<ScrollNotification>(
             child:
-            Container(
-              alignment: Alignment.centerLeft,
-              width: MediaQuery.of(context).size.width /2,
-              child: ListView.separated(
-                controller: scrollController,
-                separatorBuilder: (BuildContext context, int index) => Divider(
-                  color: Colors.white,
-                  height: dividerWidth
-                ),
-                itemCount: lengthRatios.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return  BarRow(
-                    length: lengthRatios[index] * MediaQuery.of(context).size.width /2,
-                    color: Color(colorCodes[(randomColorIndex + index) % colorCodes.length]),
-                    width: barRowWidth - dividerWidth,
-                    timestamp: index,
-                  );
-                }
+            ListView.separated(
+              controller: scrollController,
+              separatorBuilder: (BuildContext context, int index) => Divider(
+                color: Colors.white,
+                height: dividerWidth
               ),
+              itemCount: lengthRatios.length,
+              itemBuilder: (BuildContext context, int index) {
+                return  BarRow(
+                  length: lengthRatios[index] * MediaQuery.of(context).size.width /2,
+                  color: Color(colorCodes[(randomColorIndex + index) % colorCodes.length]),
+                  width: barRowWidth - dividerWidth,
+                  timestamp: index,
+                );
+              }
             ),
             onNotification: (scrollNotification) {
               double seconds = scrollController.position.pixels/barRowWidth;
@@ -117,7 +115,13 @@ class PlaybackState extends State<Playback>{
                       displayTime = (seconds.toInt()%60).toString();
                     }
                   });
-                }               },
+                } else if (scrollNotification is ScrollEndNotification) {
+                  
+                _controller.seekTo(Duration(seconds: seconds.toInt()));
+                startAutoScroll();
+                }
+
+              },
           ),
 
           floatingActionButton: FloatingActionButton(

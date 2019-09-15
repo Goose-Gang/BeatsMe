@@ -1,5 +1,7 @@
+import 'package:beats_me/services/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:beats_me/services/db.dart';
 import 'dart:math' as math;
 
 class SlidingCardsView extends StatefulWidget {
@@ -28,33 +30,26 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.55,
-      child: PageView(
-        controller: pageController,
-        // THIS STUFF IS HARDCODED NEEDS TO BE REPLACED
-        children: <Widget>[
-          SlidingCard(
-            name: 'J.S. Bach: Suite No. 1 in G major',
-            date: 'Last Played: 4.20-30',
-            assetName: 'steve-johnson.jpeg',
-            offset: pageOffset,
-          ),
-          SlidingCard(
-            name: 'Ludwig van Beethoven: Symphony No. 5 in C Minor',
-            date: 'Last Played: 4.28-31',
-            assetName: 'rodion-kutsaev.jpeg',
-            offset: pageOffset - 1,
-          ),
-          SlidingCard(
-            name: 'Franz Schubert: Du bist die Ruh',
-            date: 'Last Played: 4.28-31',
-            assetName: 'efe-kurnaz.jpg',
-            offset: pageOffset - 2,
-          ),
-        ],
-      ),
-    );
+    return FutureBuilder(
+        future: Collection<Song>(path: 'Music').getData(),
+        builder: (BuildContext context, AsyncSnapshot snap) {
+          if (snap.hasData) {
+            List<Song> songs = snap.data;
+
+            return SizedBox(
+              height: MediaQuery.of(context).size.height * 0.55,
+              child: PageView(
+                controller: pageController,
+                children: songs.map((song) => SlidingCard(
+                  name: song.title,
+                  date: 'Last Played: 4.20-30',
+                  assetName: song.img_url,
+                  offset: pageOffset,
+                )).toList()
+              ),
+            );
+          }
+        });
   }
 }
 
@@ -85,8 +80,8 @@ class SlidingCard extends StatelessWidget {
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-              child: Image.asset(
-                'assets/$assetName',
+              child: Image.network(
+                '$assetName',
                 height: MediaQuery.of(context).size.height * 0.3,
                 alignment: Alignment(-offset.abs(), 0),
                 fit: BoxFit.none,

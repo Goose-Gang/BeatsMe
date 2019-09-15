@@ -1,29 +1,49 @@
+import 'dart:async';
+
+import 'package:beats_me/services/globals.dart';
 import 'package:beats_me/services/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 
-class DatabaseService {
+class Document<T> {
   final Firestore _db = Firestore.instance;
+  final String path; 
+  DocumentReference ref;
 
-  Future<Song> getSong(songId) {
-    return _db
-        .collection('Music')
-        .document(songId)
-        .get()
-        .then((snap) => snap.data);
+  Document({ this.path }) {
+    ref = _db.document(path);
   }
 
-  Future<Set<Bar>> getSongData(songId) {
-    return _db.collection('Music')
-        .document(songId)
-        .collection('Bars')
-        .get()
-        .then((snap) => snap.data);
+  Future<T> getData() {
+    return ref.get().then((v) => Global.models[T](v.data) as T);
   }
+
+  Stream<T> streamData() {
+    return ref.snapshots().map((v) => Global.models[T](v.data) as T);
+  }
+
+  Future<void> upsert(Map data) {
+    return ref.setData(Map<String, dynamic>.from(data), merge: true);
+  }
+
 }
 
-loadData() async {
-  var songId = 'cV03UE9fPMMI0V4NlwqS';
-  var songMetaData = await DatabaseService().getSong(songId);
-  // var songData = await DatabaseService().getSong(songId);
+class Collection<T> {
+  final Firestore _db = Firestore.instance;
+  final String path; 
+  CollectionReference ref;
 
-  return songMetaData.file_url;
+  Collection({ this.path }) {
+    ref = _db.collection(path);
+  }
+
+  Future<List<T>> getData() async {
+    var snapshots = await ref.getDocuments();
+    return snapshots.documents.map((doc) => Global.models[T](doc.data) as T ).toList();
+  }
+
+  Stream<List<T>> streamData() {
+    return ref.snapshots().map((list) => list.documents.map((doc) => Global.models[T](doc.data) as T) );
+  }
+
 }

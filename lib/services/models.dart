@@ -18,6 +18,7 @@ class Song {
   String title;
   String author;
   String file_url;
+  String img_url;
 
   Song({this.sid, this.title, this.author, this.file_url});
 
