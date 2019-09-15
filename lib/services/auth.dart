@@ -1,31 +1,54 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AuthService {
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
   
-  Future<FirebaseUser> get getUser => _auth.currentUser();
+  Observable<FirebaseUser> user;
+  Observable<Map<String, dynamic>> profile;
+  PublishSubject loading = PublishSubject();
 
-  Stream<FirebaseUser> get user => _auth.onAuthStateChanged;
+  AuthService() {
+    user = Observable(_auth.onAuthStateChanged);
 
-  Future<FirebaseUser> anonLogin async {
-    FirebaseUser user = await _auth.signInAnonymously();
+    profile = user.switchMap((FirebaseUser u) {
+      if (u != null) {
+        return _db
+          .collection('Users')
+          .document(u.uid)
+          .snapshots()
+          .map((snap) => snap.data);
+      } else {
+        return Observable.just({});
+      }
+    });
+
+  }
+
+  Future<FirebaseUser> anonLogin() async {
+    AuthResult result = await _auth.signInAnonymously();
+    FirebaseUser user = result.user;
     updateUserData(user);
+    loading.add(false);
+    print("signed in " + user.displayName);
     return user;
   }
 
-  Future<void> updateUserData(FirebaseUser user) {
-    DocumentReference songRef = _db.collection('Users').document(user.id);
+  void updateUserData(FirebaseUser user) async {
+    DocumentReference ref = _db.collection('Users').document(user.uid);
 
-    return songRef.setData({
-      'id': user.id,
-      'lastActive': DateTime.now()
+    return ref.setData({
+      'uid': user.uid,
+      'lastSeen': DateTime.now()
     }, merge: true);
   }
 
-  Future<void> signOut() {
-    return _auth.signOut();
+  void signOut() {
+    _auth.signOut();
   }
 }
 
+final AuthService authService = AuthService();
