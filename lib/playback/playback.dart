@@ -33,7 +33,7 @@ class PlaybackState extends State<Playback>{
     scrollController = new ScrollController();
     displayTime = ""; // actually the time stamp
     isAutoScrolling = false;
-    barRowWidth = 40; // total = divider + container?
+    barRowWidth = 60; // total = divider + container?
     dividerWidth = 10;
   }
   // thickness is 20 
@@ -61,21 +61,25 @@ class PlaybackState extends State<Playback>{
           body: 
           NotificationListener<ScrollNotification>(
             child:
-            ListView.separated(
-              controller: scrollController,
-              separatorBuilder: (BuildContext context, int index) => Divider(
-                color: Colors.white,
-                height: dividerWidth
+            Container(
+              alignment: Alignment.centerLeft,
+              width: MediaQuery.of(context).size.width*0.5,
+              child: ListView.separated(
+                controller: scrollController,
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  color: Colors.white,
+                  height: dividerWidth
+                ),
+                itemCount: lengthRatios.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return  BarRow(
+                    length: lengthRatios[index] * MediaQuery.of(context).size.width /2,
+                    color: Color(colorCodes[(randomColorIndex + index) % colorCodes.length]),
+                    width: barRowWidth - dividerWidth,
+                    timestamp: index,
+                  );
+                }
               ),
-              itemCount: lengthRatios.length,
-              itemBuilder: (BuildContext context, int index) {
-                return  BarRow(
-                  length: lengthRatios[index] * MediaQuery.of(context).size.width /2,
-                  color: Color(colorCodes[(randomColorIndex + index) % colorCodes.length]),
-                  width: barRowWidth - dividerWidth,
-                  timestamp: index,
-                );
-              }
             ),
             onNotification: (scrollNotification) {
                 if (scrollNotification is ScrollUpdateNotification) {
@@ -158,8 +162,8 @@ class BarRowState extends State<BarRow> {
                   )
                 ],
                 borderRadius: new BorderRadius.only(
-                      bottomRight: const Radius.circular(5.0),
-                      topRight: const Radius.circular(5.0)
+                      bottomRight: const Radius.circular(100.0),
+                      topRight: const Radius.circular(100.0)
                 ),
               ),
               ),

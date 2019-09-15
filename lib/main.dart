@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final PageController pc = PageController();
+  final PageController pc = PageController(
+    initialPage: 0
+  );
 
   @override
   MyApp() {
@@ -26,8 +28,8 @@ class MyApp extends StatelessWidget {
           scrollDirection: Axis.vertical,
           controller: pc,
           children: <Widget>[
+            Playback(),
             Collection(),
-            Playback()
           ],
         ),
       ),
