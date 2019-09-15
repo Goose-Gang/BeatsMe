@@ -37,6 +37,8 @@ dependencies:
   font_awesome_flutter: 8.5.0
   marquee_flutter: 0.1.4
 
+  file_picker: ^1.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
