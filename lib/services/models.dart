@@ -20,14 +20,15 @@ class Song {
   String file_url;
   String img_url;
 
-  Song({this.sid, this.title, this.author, this.file_url});
+  Song({this.sid, this.title, this.author, this.file_url, this.img_url});
 
   factory Song.fromMap(Map data) {
     return Song(
-      sid: data['id'] ?? '',
+      sid: data['uid'] ?? '',
       title: data['name'] ?? 'untitled',
       author: data['author'] ?? 'unknown artist',
       file_url: data['url'] ?? '',
+      img_url: data['img_url'] ?? ''
     );
   }
 }

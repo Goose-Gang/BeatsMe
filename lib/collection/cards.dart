@@ -40,12 +40,12 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
               height: MediaQuery.of(context).size.height * 0.55,
               child: PageView(
                 controller: pageController,
-                children: songs.map((song) => SlidingCard(
+                children: songs.asMap().map((index, song) => MapEntry(index, SlidingCard(
                   name: song.title,
                   date: 'Last Played: 4.20-30',
                   assetName: song.img_url,
-                  offset: pageOffset,
-                )).toList()
+                  offset: pageOffset - index,
+                ))).values.toList()
               ),
             );
           }
