@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:405306958645:android:a64e7f9faa8f8eed30627c",
+        "mobilesdk_app_id": "1:405306958645:android:5cf1fc0bdbaccf2e30627c",
         "android_client_info": {
-          "package_name": "com.example.beats_me"
+          "package_name": "com.goose_gang.beats_me"
         }
       },
       "oauth_client": [
