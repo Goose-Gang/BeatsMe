@@ -267,7 +267,7 @@ class SheetHeader extends StatelessWidget {
     return Positioned(
       top: topMargin,
       child: Text(
-        'Music',
+        'Snippets',
         style: TextStyle(
           color: Colors.white,
           fontSize: fontSize,

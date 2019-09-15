@@ -1,6 +1,7 @@
 import 'package:beats_me/collection/cards.dart';
 import 'package:beats_me/collection/sheet.dart';
 import 'package:beats_me/collection/tabs.dart';
+import 'package:beats_me/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class Collection extends StatelessWidget {
